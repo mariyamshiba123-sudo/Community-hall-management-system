@@ -6,96 +6,72 @@
 <title>Admin - Community Hall</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  // Your EmailJS Keys
-  emailjs.init({ publicKey: "H9EoNRo_8MGJ3oCAX" });
-</script>
+<script>emailjs.init({publicKey:"H9EoNRo_8MGJ3oCAX"});</script>
 </head>
 <body class="bg-gray-100 p-6">
-<div class="max-w-6xl mx-auto">
-  <h1 class="text-3xl font-bold">Community Hall - Admin Panel</h1>
-  <p class="text-gray-600 mb-6">Approve / Reject - Email will be sent automatically to customer</p>
-  <div id="list" class="space-y-4"><p class="bg-white p-4 rounded">Loading bookings...</p></div>
+<div class="max-w-5xl mx-auto">
+<h1 class="text-3xl font-bold">Community Hall - Admin Panel</h1>
+<p class="text-gray-500 mb-6">Approve/Reject - Email will be sent automatically</p>
+<div id="list" class="space-y-3"><p class="bg-white p-4 rounded shadow">Loading bookings...</p></div>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-// YOUR REAL FIREBASE CONFIG - From your firebase.js file
 const firebaseConfig = {
-  apiKey: "AIzaSyAf_YE0VIAIDW-fDkoJ2e3I2ThKXo",
+  apiKey: "AIzaSyAt_YE6dVIAIDW-tDkoJU2er3iZThfXJo",
   authDomain: "communityhallmanagement.firebaseapp.com",
   projectId: "communityhallmanagement",
   storageBucket: "communityhallmanagement.firebasestorage.app",
-  messagingSenderId: "869478869164",
-  appId: "1:869478869164:web:2d5d6f5c6e8c9a0b1c2d3e"
+  messagingSenderId: "571726922784",
+  appId: "1:571726922784:web:ba70f0251a3cc0f87e2845"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function loadBookings(){
-  const el = document.getElementById("list");
+async function load(){
+  const el=document.getElementById("list");
   try{
-    const snap = await getDocs(collection(db, "bookings"));
-    if(snap.empty){ el.innerHTML="<p class='bg-white p-4 rounded'>No bookings found in Firestore > bookings collection</p>"; return; }
+    const snap=await getDocs(collection(db,"bookings"));
+    if(snap.empty){ el.innerHTML="<p class='bg-white p-4 rounded'>No bookings found</p>"; return; }
     el.innerHTML="";
     snap.forEach(d=>{
       const data=d.data();
-      const id=d.id;
-      const card=document.createElement("div");
-      card.className="bg-white p-4 rounded shadow flex flex-col md:flex-row justify-between gap-3";
-      card.innerHTML=`
-        <div>
-          <p><b>Name:</b> ${data.name||data.customer_name||'N/A'}</p>
-          <p><b>Email:</b> ${data.email||'N/A'}</p>
-          <p><b>Date:</b> ${data.date||data.booking_date||'N/A'}</p>
-          <p><b>Status:</b> <span class="font-bold text-blue-600">${data.status||'Pending'}</span></p>
-          <p class="text-xs text-gray-400">ID: ${id}</p>
-        </div>
-        <div class="flex gap-2 h-fit">
-          <button onclick="changeStatus('${id}','Approved')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Approve</button>
-          <button onclick="changeStatus('${id}','Rejected')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Reject</button>
-        </div>
-      `;
-      el.appendChild(card);
+      el.innerHTML+=`<div class="bg-white p-4 rounded shadow flex justify-between items-center">
+      <div><b>${data.name||data.customer_name||'Customer'}</b> - ${data.email}<br>Date: ${data.date||data.booking_date||''} | <b class="text-blue-600">${data.status||'Pending'}</b></div>
+      <div class="flex gap-2"><button onclick="changeStatus('${d.id}','Approved')" class="bg-green-600 text-white px-4 py-2 rounded">Approve</button><button onclick="changeStatus('${d.id}','Rejected')" class="bg-red-600 text-white px-4 py-2 rounded">Reject</button></div></div>`;
     });
   }catch(e){
-    el.innerHTML=`<p class='bg-red-100 p-4 rounded'>Error: ${e.message}. Check Firestore rules & config.</p>`;
+    el.innerHTML="<p class='bg-red-100 p-4'>Error: "+e.message+"</p>";
     console.error(e);
   }
 }
 
-window.changeStatus = async (id, newStatus)=>{
-  if(!confirm(`Mark this booking as ${newStatus}? Email will be sent.`)) return;
+window.changeStatus=async(id,newStatus)=>{
+  if(!confirm("Mark as "+newStatus+" and send email?")) return;
+  const ref=doc(db,"bookings",id);
+  const snap=await getDoc(ref);
+  const data=snap.data();
+  await updateDoc(ref,{status:newStatus});
   try{
-    const ref = doc(db, "bookings", id);
-    const snap = await getDoc(ref);
-    const data = snap.data();
-
-    await updateDoc(ref, { status: newStatus });
-
     await emailjs.send("service_cfacxic","template_xccag9n",{
-      name: data.name || data.customer_name || "Customer",
+      name: data.name||data.customer_name||"Customer",
       email: data.email,
       booking_status: newStatus,
-      message: `Your Community Hall booking for ${data.date||data.booking_date||''} has been ${newStatus}. Reference: ${id}`,
+      message: `Your booking for ${data.date||data.booking_date||''} has been ${newStatus}. Ref: ${id}`,
       booking_date: data.date||data.booking_date||"",
       event_type: data.event||data.event_type||"Hall Booking",
       booking_reference: id
     });
-
-    alert(`✅ ${newStatus}! Email sent to ${data.email}`);
-    loadBookings();
+    alert("✅ "+newStatus+" & Email sent to "+data.email);
   }catch(err){
-    console.error(err);
-    alert(`Status set to ${newStatus} but email failed: ${err.text||err.message}`);
-    loadBookings();
+    alert("Status updated to "+newStatus+" but email failed: "+(err.text||err.message));
   }
-};
-
-loadBookings();
+  load();
+}
+load();
 </script>
 </body>
 </html>
