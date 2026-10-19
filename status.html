@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Booking Status</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Check Your Booking Status</h1>
+        <p>Community Hall Booking and Management System</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Find Your Booking</h2>
+
+            <form id="statusForm">
+                <label for="reference">Booking Reference Number</label>
+
+                <input
+                    type="text"
+                    id="reference"
+                    placeholder="Enter your booking reference"
+                    required
+                >
+
+                <button type="submit">Check Status</button>
+            </form>
+
+            <p id="statusMessage" role="status" aria-live="polite"></p>
+
+            <div id="bookingDetails" hidden>
+                <h3>Booking Details</h3>
+                <p id="eventDetails"></p>
+                <p id="dateDetails"></p>
+                <p id="guestDetails"></p>
+                <p id="bookingStatus"></p>
+            </div>
+
+            <p>
+                <a href="index.html">Back to Booking Page</a>
+            </p>
+        </section>
+    </main>
+
+    <script type="module" src="status.js"></script>
+</body>
+</html>
