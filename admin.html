@@ -1,56 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Community Hall</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    // YOUR EMAILJS KEYS - 100% CORRECT
-    const EMAILJS_PUBLIC_KEY = "H9EoNRo_8MGJ3oCAX";
-    const EMAILJS_SERVICE_ID = "service_cfacxic";
-    const EMAILJS_TEMPLATE_ID = "template_xccag9n";
-    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Community Hall</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init({ publicKey: "H9EoNRo_8MGJ3oCAX" });</script>
 </head>
 <body class="bg-gray-100 p-6">
-  <h1 class="text-3xl font-bold mb-6">Community Hall - Admin Panel</h1>
-  <div id="bookingsList" class="space-y-4">
-    <p>Loading bookings...</p>
-  </div>
+<div class="max-w-5xl mx-auto">
+<h1 class="text-3xl font-bold mb-6">Community Hall - Admin Panel</h1>
+<div id="list" class="space-y-3">Loading bookings...</div>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { firebaseConfig } from "./firebase.js";
 
-    // PASTE YOUR FIREBASE CONFIG HERE (keep your existing config)
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+async function load(){
+  const snap = await getDocs(collection(db, "bookings"));
+  const el = document.getElementById("list");
+  if(snap.empty){ el.innerHTML="No bookings found"; return; }
+  el.innerHTML="";
+  snap.forEach(d=>{
+    const data=d.data();
+    const div=document.createElement("div");
+    div.className="bg-white p-4 rounded shadow flex justify-between items-center";
+    div.innerHTML=`
+      <div>
+        <p><b>${data.name||data.customer_name||'Customer'}</b> (${data.email})</p>
+        <p>Date: ${data.date||data.booking_date} | Status: <b class="text-blue-600">${data.status||'Pending'}</b></p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="changeStatus('${d.id}','Approved')" class="bg-green-600 text-white px-4 py-2 rounded">Approve</button>
+        <button onclick="changeStatus('${d.id}','Rejected')" class="bg-red-600 text-white px-4 py-2 rounded">Reject</button>
+      </div>`;
+    el.appendChild(div);
+  });
+}
 
-    const EMAILJS_SERVICE_ID = "service_cfacxic";
-    const EMAILJS_TEMPLATE_ID = "template_xccag9n";
-
-    async function loadBookings() {
-      const querySnapshot = await getDocs(collection(db, "bookings"));
-      const container = document.getElementById("bookingsList");
-      container.innerHTML = "";
-      
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const id = docSnap.id;
-        const div = document.createElement("div");
-        div.className = "bg-white p-4 rounded shadow flex justify-between items-center";
-        div.innerHTML = `
-          <div>
-            <p><b>Name:</b> ${data.name || data.customer_name}</p>
+window.changeStatus = async (id, newStatus)=>{
+  if(!confirm(`Mark as ${newStatus}?`)) return;
+  const ref=doc(db,"bookings",id);
+  const snap=await getDoc(ref);
+  const data=snap.data();
+  await updateDoc(ref,{status:newStatus});
+  try{
+    await emailjs.send("service_cfacxic","template_xccag9n",{
+      name: data.name||data.customer_name||"Customer",
+      email: data.email,
+      booking_status: newStatus,
+      message: `Your booking for ${data.date||data.booking_date||''} has been ${newStatus}. Reference: ${id}`,
+      booking_date: data.date||data.booking_date||"",
+      event_type: data.event||data.event_type||"Hall Booking",
+      booking_reference: id
+    });
+    alert("✅ Email sent to "+data.email+" - Status: "+newStatus);
+  }catch(err){
+    alert("Status updated but email failed: "+(err.text||err.message));
+  }
+  load();
+}
+load();
+</script>
+</body>
+</html>
