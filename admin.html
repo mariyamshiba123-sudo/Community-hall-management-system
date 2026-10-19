@@ -85,7 +85,7 @@ window.changeStatus=async(id,newStatus)=>{
   
   await updateDoc(ref,{status:newStatus});
   try{
-    await emailjs.send("service_cfacxic","template_xccag9n",{
+    await emailjs.send("service_cfacxic","gmh7ni",{
       name: name,
       email: email,
       booking_status: newStatus,
