@@ -1,52 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Community Hall</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Community Hall</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    // YOUR EMAILJS KEYS - 100% CORRECT
+    const EMAILJS_PUBLIC_KEY = "H9EoNRo_8MGJ3oCAX";
+    const EMAILJS_SERVICE_ID = "service_cfacxic";
+    const EMAILJS_TEMPLATE_ID = "template_xccag9n";
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  </script>
 </head>
-<body>
+<body class="bg-gray-100 p-6">
+  <h1 class="text-3xl font-bold mb-6">Community Hall - Admin Panel</h1>
+  <div id="bookingsList" class="space-y-4">
+    <p>Loading bookings...</p>
+  </div>
 
-    <header>
-        <h1>Community Hall Admin Dashboard</h1>
-        <p>Manage customer booking requests</p>
-    </header>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <main>
-        <section>
-            <h2>Administrator Login</h2>
+    // PASTE YOUR FIREBASE CONFIG HERE (keep your existing config)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-            <form id="loginForm">
-                <label for="email">Admin Email</label>
-                <input type="email" id="email" required>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-                <label for="password">Password</label>
-                <input type="password" id="password" required>
+    const EMAILJS_SERVICE_ID = "service_cfacxic";
+    const EMAILJS_TEMPLATE_ID = "template_xccag9n";
 
-                <button type="submit">Login</button>
-            </form>
-
-            <p id="loginMessage" role="status"></p>
-        </section>
-
-        <section id="dashboard" hidden>
-            <h2>Booking Requests</h2>
-
-            <button id="refreshBookings" type="button">
-                Refresh Bookings
-            </button>
-
-            <button id="logoutButton" type="button">
-                Logout
-            </button>
-
-            <p id="dashboardMessage" role="status"></p>
-
-            <div id="bookingList"></div>
-        </section>
-    </main>
-    <script src="https://unpkg.com/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="module" src="admin.js"></script>
-</body>
-</html>
+    async function loadBookings() {
+      const querySnapshot = await getDocs(collection(db, "bookings"));
+      const container = document.getElementById("bookingsList");
+      container.innerHTML = "";
+      
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const id = docSnap.id;
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded shadow flex justify-between items-center";
+        div.innerHTML = `
+          <div>
+            <p><b>Name:</b> ${data.name || data.customer_name}</p>
