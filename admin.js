@@ -1,4 +1,12 @@
 import { auth, db } from "./firebase.js";
+// EmailJS configuration
+const EMAILJS_PUBLIC_KEY = "H9EoNRo_8MGJ3oCAX";
+const EMAILJS_SERVICE_ID = "service_cfacxic";
+const EMAILJS_TEMPLATE_ID = "template_xccag9n";
+
+emailjs.init({
+    publicKey: EMAILJS_PUBLIC_KEY
+});
 
 import {
     signInWithEmailAndPassword,
