@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Community Hall</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Community Hall Admin Dashboard</h1>
+        <p>Manage customer booking requests</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Administrator Login</h2>
+
+            <form id="loginForm">
+                <label for="email">Admin Email</label>
+                <input type="email" id="email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <p id="loginMessage" role="status"></p>
+        </section>
+
+        <section id="dashboard" hidden>
+            <h2>Booking Requests</h2>
+
+            <button id="refreshBookings" type="button">
+                Refresh Bookings
+            </button>
+
+            <button id="logoutButton" type="button">
+                Logout
+            </button>
+
+            <p id="dashboardMessage" role="status"></p>
+
+            <div id="bookingList"></div>
+        </section>
+    </main>
+
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
