@@ -128,12 +128,50 @@ async function loadBookings() {
                 }
 
                 try {
-                    await updateDoc(
-                        doc(db, "bookings", bookingDocument.id),
-                        { bookingStatus: statusSelect.value }
-                    );
+                 const newStatus = statusSelect.value;
+const oldStatus = booking.bookingStatus || "Pending";
 
-                    alert("Booking status updated.");
+await updateDoc(
+    doc(db, "bookings", bookingDocument.id),
+    { bookingStatus: newStatus }
+);
+
+if (
+    newStatus !== oldStatus &&
+    (newStatus === "Approved" || newStatus === "Rejected")
+) {
+    try {
+        await emailjs.send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_TEMPLATE_ID,
+            {
+                to_email: booking.email,
+                customer_name: booking.customerName,
+                booking_reference: bookingDocument.id,
+                event_type: booking.eventType,
+                booking_date: booking.bookingDate,
+                booking_status: newStatus,
+                message: newStatus === "Approved"
+                    ? "Good news! Your booking has been approved."
+                    : "Unfortunately, your booking has been rejected."
+            }
+        );
+
+        alert(`Booking updated and email sent to ${booking.email}.`);
+    } catch (emailError) {
+        console.error("Email sending failed:", emailError);
+        alert("Booking status updated, but the email could not be sent.");
+    }
+} else {
+    alert("Booking status updated.");
+}
+
+await loadBookings();
+
+alert("Booking status updated.");
+                 
+
+                    
                     await loadBookings();
                 } catch (error) {
                     console.error(error);
