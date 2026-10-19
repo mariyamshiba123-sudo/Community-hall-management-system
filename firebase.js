@@ -7,7 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: ""AIzaSyAT_YEd6V1AIDVW-tDkoJU2erJiZTHWXJo",
+  apiKey: "AIzaSyAT_YEd6V1AIDVW-tDkoJU2erJiZTHWXJo",
   authDomain: "communityhallmanagement.firebaseapp.com",
   projectId: "communityhallmanagement",
   storageBucket: "communityhallmanagement.firebasestorage.app",
