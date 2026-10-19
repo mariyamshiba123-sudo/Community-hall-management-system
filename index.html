@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Hall Booking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Community Hall</h1>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#booking">Book Hall</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <h2>Welcome to Our Community Hall</h2>
+        <p>Your perfect place for weddings, celebrations, meetings and special events.</p>
+        <a href="#booking" class="button">Book Your Hall</a>
+    </section>
+
+    <section id="about" class="section">
+        <h2>About Our Hall</h2>
+        <p>Our community hall provides a convenient space for family functions,
+        cultural programmes, meetings and community events.</p>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Spacious Hall</h3>
+                <p>A comfortable venue for your special occasions.</p>
+            </div>
+            <div class="card">
+                <h3>Easy Booking</h3>
+                <p>Submit a booking request through our website.</p>
+            </div>
+            <div class="card">
+                <h3>Hall Management</h3>
+                <p>Organised booking and maintenance management.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking" class="section">
+        <h2>Book a Community Hall</h2>
+
+        <form id="bookingForm">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+
+            <label for="event">Event Type</label>
+            <select id="event" required>
+                <option value="">Select an event</option>
+                <option>Wedding</option>
+                <option>Birthday</option>
+                <option>Meeting</option>
+                <option>Cultural Programme</option>
+                <option>Other</option>
+            </select>
+
+            <label for="date">Booking Date</label>
+            <input type="date" id="date" required>
+
+            <label for="guests">Number of Guests</label>
+            <input type="number" id="guests" min="1" required>
+
+            <button type="submit">Submit Booking Request</button>
+        </form>
+
+        <p id="message"></p>
+    </section>
+
+    <section id="contact" class="section">
+        <h2>Contact Us</h2>
+        <p>Contact the community hall administrator for booking enquiries.</p>
+    </section>
+
+    <footer>
+        <p>Community Hall Booking and Management System | College Project 2026</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
