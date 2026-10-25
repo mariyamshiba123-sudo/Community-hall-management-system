@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Hall | Community Hall Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .booking-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 35px;
+            background: #fffdf8;
+            border: 1px solid #e5d5b5;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(80, 55, 25, 0.08);
+        }
+
+        .booking-container h1 {
+            text-align: center;
+            color: #654321;
+            margin-bottom: 10px;
+        }
+
+        .booking-intro {
+            text-align: center;
+            color: #766b5e;
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4b3928;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d8c8ad;
+            border-radius: 8px;
+            background: white;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .booking-submit {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #98713b;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .booking-submit:hover {
+            background: #765326;
+        }
+
+        .notice {
+            padding: 13px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .notice.success {
+            background: #e6f5e8;
+            color: #205b2a;
+        }
+
+        .notice.error {
+            background: #fde9e7;
+            color: #8a2520;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #765326;
+        }
+
+        @media (max-width: 600px) {
+            .booking-container {
+                margin: 20px 12px;
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <a href="/" class="logo">Community Hall</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/halls">Our Halls</a>
+            <a href="/booking">Book a Hall</a>
+            <a href="/my-bookings">My Bookings</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </nav>
+</header>
+
+<main class="booking-container">
+    <h1>Book Your Hall</h1>
+    <p class="booking-intro">
+        Share your event details and submit your booking request.
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="notice {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <form id="bookingForm" method="POST" action="{{ url_for('booking') }}">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="customerName">Full Name *</label>
+                <input type="text" id="customerName" name="customerName"
+                       placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email"
+                       placeholder="Enter your email" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone"
+                       placeholder="10-digit mobile number"
+                       pattern="[0-9]{10}" maxlength="10" required>
+            </div>
+
+            <div class="form-group">
+                <label for="hall">Select Hall *</label>
+                <select id="hall" name="hall" required>
+                    <option value="">-- Select a Hall --</option>
+                    <option value="Grand Celebration Hall">Grand Celebration Hall — ₹25,000</option>
+                    <option value="Royal Banquet Hall">Royal Banquet Hall — ₹15,000</option>
+                    <option value="Community Function Hall">Community Function Hall — ₹8,000</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="eventType">Event Type *</label>
+            <select id="eventType" name="eventType" required>
+                <option value="">-- Select Event Type --</option>
+                <option value="Wedding">Wedding</option>
+                <option value="Birthday Party">Birthday Party</option>
+                <option value="Meeting">Meeting</option>
+                <option value="Cultural Programme">Cultural Programme</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="eventDate">Event Date *</label>
+                <input type="date" id="eventDate" name="eventDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="guests">Number of Guests *</label>
+                <input type="number" id="guests" name="guests"
+                       min="1" placeholder="Expected guests" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Additional Requirements</label>
+            <textarea id="message" name="message"
+                      placeholder="Tell us about any special requirements"></textarea>
+        </div>
+
+        <button type="submit" class="booking-submit">
+            Submit Booking Request
+        </button>
+    </form>
+
+    <a class="back-link" href="/halls">← View Our Halls</a>
+</main>
+
+<script>
+    const eventDateInput = document.getElementById("eventDate");
+    const today = new Date();
+    const localToday = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+    ).toISOString().split("T")[0];
+
+    eventDateInput.min = localToday;
+</script>
+
+</body>
+</html>

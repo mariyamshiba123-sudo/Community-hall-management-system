@@ -1,0 +1,271 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Community Hall</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #faf7f0;
+            color: #463625;
+            font-family: Arial, sans-serif;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #765326;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #766b5e;
+            margin-bottom: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border: 1px solid #e5d5b5;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h2 {
+            font-size: 32px;
+            margin: 8px 0;
+            color: #98713b;
+        }
+
+        .table-container {
+            background: white;
+            border: 1px solid #e5d5b5;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee5d6;
+        }
+
+        th {
+            background: #eee3d0;
+            color: #543b20;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .Pending {
+            background: #fff0ce;
+            color: #805500;
+        }
+
+        .Approved {
+            background: #dff5e3;
+            color: #216b32;
+        }
+
+        .Rejected {
+            background: #fde5e3;
+            color: #9b2923;
+        }
+
+        .action-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-form button {
+            padding: 8px 10px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .approve-btn {
+            background: #357a45;
+        }
+
+        .reject-btn {
+            background: #b33a32;
+        }
+
+        .notice {
+            padding: 13px;
+            border-radius: 8px;
+            margin: 15px 0;
+            background: #e6f5e8;
+            color: #205b2a;
+        }
+
+        .empty-message {
+            background: white;
+            padding: 35px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #765326;
+        }
+
+        @media (max-width: 650px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <a href="/" class="logo">Community Hall</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/halls">Our Halls</a>
+            <a href="/booking">Book a Hall</a>
+            <a href="/my-bookings">My Bookings</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </nav>
+</header>
+
+<main class="admin-container">
+    <h1>Admin Dashboard</h1>
+    <p class="subtitle">Manage customer bookings and update their status.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="notice">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="stats">
+        <div class="stat-card">
+            <p>Total Bookings</p>
+            <h2>{{ total }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Pending Requests</p>
+            <h2>{{ pending }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Approved Bookings</p>
+            <h2>{{ approved }}</h2>
+        </div>
+    </section>
+
+    <h2>Customer Booking Requests</h2>
+
+    {% if bookings %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Hall</th>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Guests</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.id }}</td>
+                        <td>
+                            <strong>{{ booking.customer_name }}</strong><br>
+                            {{ booking.email }}
+                        </td>
+                        <td>{{ booking.phone }}</td>
+                        <td>{{ booking.hall }}</td>
+                        <td>{{ booking.event_type }}</td>
+                        <td>{{ booking.event_date }}</td>
+                        <td>{{ booking.guests }}</td>
+                        <td>
+                            <span class="status {{ booking.status }}">
+                                {{ booking.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if booking.status == 'Pending' %}
+                            <form class="action-form" method="POST"
+                                  action="{{ url_for('admin') }}">
+                                <input type="hidden" name="booking_id"
+                                       value="{{ booking.id }}">
+
+                                <button class="approve-btn" type="submit"
+                                        name="action" value="Approved">
+                                    Approve
+                                </button>
+
+                                <button class="reject-btn" type="submit"
+                                        name="action" value="Rejected">
+                                    Reject
+                                </button>
+                            </form>
+                            {% else %}
+                                No action needed
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <div class="empty-message">
+            <h2>No Booking Requests Yet</h2>
+            <p>Customer booking requests will appear here.</p>
+        </div>
+    {% endif %}
+
+    <a class="back-link" href="/">← Back to Home</a>
+</main>
+
+</body>
+</html>

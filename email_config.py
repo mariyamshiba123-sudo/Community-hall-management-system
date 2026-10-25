@@ -1,0 +1,5 @@
+
+import os
+
+EMAIL_ADDRESS = os.getenv("HALL_EMAIL_ADDRESS", "")
+EMAIL_APP_PASSWORD = os.getenv("HALL_EMAIL_APP_PASSWORD", "")

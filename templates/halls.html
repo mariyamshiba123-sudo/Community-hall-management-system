@@ -1,0 +1,178 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Halls | Community Hall Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .halls-hero {
+            padding: 65px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f0e3, #ead8bb);
+        }
+
+        .halls-hero h1 {
+            font-size: 42px;
+            color: #503821;
+            margin-bottom: 15px;
+        }
+
+        .halls-hero p {
+            color: #715b45;
+            font-size: 17px;
+        }
+
+        .hall-list {
+            max-width: 1150px;
+            margin: 45px auto;
+            padding: 0 22px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        .hall-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 22px rgba(70, 48, 25, 0.12);
+            transition: transform 0.3s ease;
+        }
+
+        .hall-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .hall-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .hall-details {
+            padding: 24px;
+        }
+
+        .hall-details h2 {
+            color: #503821;
+            margin-top: 0;
+        }
+
+        .hall-details p {
+            color: #6e6255;
+            line-height: 1.7;
+        }
+
+        .hall-info {
+            border-top: 1px solid #eee2d1;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .hall-price {
+            color: #9b7137;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .hall-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 22px;
+            background: #9b7137;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .hall-button:hover {
+            background: #765126;
+        }
+
+        .hall-note {
+            text-align: center;
+            color: #796b5c;
+            margin: 0 20px 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/halls">Our Halls</a>
+        <a href="/booking">Book a Hall</a>
+        <a href="/my-bookings">My Bookings</a>
+        <a href="/admin">Admin</a>
+    </nav>
+</header>
+
+<section class="halls-hero">
+    <h1>Discover Our Halls</h1>
+    <p>Find the perfect space for your special occasion.</p>
+</section>
+
+<section class="hall-list">
+
+    <div class="hall-card">
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
+             alt="Elegant wedding hall">
+        <div class="hall-details">
+            <h2>Grand Celebration Hall</h2>
+            <p>A spacious venue suitable for weddings, receptions and large celebrations.</p>
+            <div class="hall-info">
+                <p>👥 Guest capacity: 500</p>
+                <p>✨ Facilities: Stage, lighting and parking</p>
+                <p class="hall-price">₹25,000 / day</p>
+                <a class="hall-button" href="/booking">Book This Hall</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hall-card">
+        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80"
+             alt="Modern banquet hall">
+        <div class="hall-details">
+            <h2>Royal Banquet Hall</h2>
+            <p>A stylish indoor venue for engagements, birthday parties and family functions.</p>
+            <div class="hall-info">
+                <p>👥 Guest capacity: 250</p>
+                <p>✨ Facilities: Seating, lighting and air conditioning</p>
+                <p class="hall-price">₹15,000 / day</p>
+                <a class="hall-button" href="/booking">Book This Hall</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hall-card">
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
+             alt="Community event hall">
+        <div class="hall-details">
+            <h2>Community Function Hall</h2>
+            <p>A welcoming venue for meetings, cultural programmes and community events.</p>
+            <div class="hall-info">
+                <p>👥 Guest capacity: 150</p>
+                <p>✨ Facilities: Chairs, tables and event space</p>
+                <p class="hall-price">₹8,000 / day</p>
+                <a class="hall-button" href="/booking">Book This Hall</a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<p class="hall-note">
+    Note: Hall names, capacities, facilities and prices are sample details for the project.
+</p>
+
+<footer>
+    <p>© 2026 Community Hall Booking and Management System</p>
+</footer>
+
+</body>
+</html>
