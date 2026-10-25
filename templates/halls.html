@@ -1,11 +1,14 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Halls | Community Hall Management</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <title>Our Halls | GrandSpace</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
     <style>
         .halls-hero {
@@ -43,7 +46,7 @@
         }
 
         .hall-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-5px);
         }
 
         .hall-card img {
@@ -73,29 +76,87 @@
         }
 
         .hall-price {
-            color: #9b7137;
+            color: #9b7137 !important;
             font-size: 21px;
             font-weight: bold;
         }
 
         .hall-button {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 22px;
+            display: block;
+            margin-top: 12px;
+            padding: 12px 16px;
             background: #9b7137;
-            color: white;
+            color: white !important;
             text-decoration: none;
+            text-align: center;
             border-radius: 6px;
+            transition: background 0.2s ease;
         }
 
         .hall-button:hover {
             background: #765126;
         }
 
+        .location-button {
+            background: #315b45;
+        }
+
+        .location-button:hover {
+            background: #214330;
+        }
+
+        .hall-location {
+            padding: 14px;
+            background: #faf6ef;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .hall-location strong {
+            color: #503821;
+        }
+
+        .location-address {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .sample-label {
+            display: inline-block;
+            font-size: 11px;
+            color: #795d31;
+            background: #f2e4c9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
         .hall-note {
             text-align: center;
             color: #796b5c;
             margin: 0 20px 40px;
+            line-height: 1.7;
+        }
+
+        #location-message {
+            display: none;
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 14px;
+            border-radius: 8px;
+            background: #f8f0e3;
+            color: #503821;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .halls-hero h1 {
+                font-size: 32px;
+            }
+
+            .hall-list {
+                padding: 0 15px;
+            }
         }
     </style>
 </head>
@@ -114,52 +175,176 @@
 
 <section class="halls-hero">
     <h1>Discover Our Halls</h1>
-    <p>Find the perfect space for your special occasion.</p>
+    <p>Find your perfect venue and get directions with Google Maps.</p>
 </section>
+
+<div id="location-message" role="status" aria-live="polite"></div>
 
 <section class="hall-list">
 
+    <!-- GRAND CELEBRATION HALL -->
     <div class="hall-card">
-        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
-             alt="Elegant wedding hall">
+
+        <img
+            src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
+            alt="Elegant wedding hall">
+
         <div class="hall-details">
+
             <h2>Grand Celebration Hall</h2>
-            <p>A spacious venue suitable for weddings, receptions and large celebrations.</p>
+
+            <p>
+                A spacious venue suitable for weddings, receptions
+                and large celebrations.
+            </p>
+
             <div class="hall-info">
                 <p>👥 Guest capacity: 500</p>
                 <p>✨ Facilities: Stage, lighting and parking</p>
+
                 <p class="hall-price">₹25,000 / day</p>
-                <a class="hall-button" href="/booking">Book This Hall</a>
+
+                <div class="hall-location">
+                    <strong>📍 Hall Location</strong>
+
+                    <p class="location-address">
+                        Kadri, near Kadri Manjunath Temple,
+                        Mangaluru, Karnataka, India
+                    </p>
+
+                    <span class="sample-label">SAMPLE LOCATION</span>
+                </div>
+
+                <a class="hall-button"
+                   href="/booking">
+                    Book This Hall
+                </a>
+
+                <a class="hall-button location-button"
+                   href="https://www.google.com/maps/search/?api=1&query=Kadri+Manjunath+Temple%2C+Mangaluru%2C+Karnataka"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    🗺️ View on Google Maps
+                </a>
+
+                <button class="hall-button location-button"
+                        type="button"
+                        onclick="getDirections('Kadri Manjunath Temple, Kadri, Mangaluru, Karnataka, India')">
+                    🚗 Get Directions from My Location
+                </button>
+
             </div>
         </div>
     </div>
 
+
+    <!-- ROYAL BANQUET HALL -->
     <div class="hall-card">
-        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80"
-             alt="Modern banquet hall">
+
+        <img
+            src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80"
+            alt="Modern banquet hall">
+
         <div class="hall-details">
+
             <h2>Royal Banquet Hall</h2>
-            <p>A stylish indoor venue for engagements, birthday parties and family functions.</p>
+
+            <p>
+                A stylish indoor venue for engagements,
+                birthday parties and family functions.
+            </p>
+
             <div class="hall-info">
                 <p>👥 Guest capacity: 250</p>
                 <p>✨ Facilities: Seating, lighting and air conditioning</p>
+
                 <p class="hall-price">₹15,000 / day</p>
-                <a class="hall-button" href="/booking">Book This Hall</a>
+
+                <div class="hall-location">
+                    <strong>📍 Hall Location</strong>
+
+                    <p class="location-address">
+                        Nazarbad, near Mysuru Palace,
+                        Mysuru, Karnataka, India
+                    </p>
+
+                    <span class="sample-label">SAMPLE LOCATION</span>
+                </div>
+
+                <a class="hall-button"
+                   href="/booking">
+                    Book This Hall
+                </a>
+
+                <a class="hall-button location-button"
+                   href="https://www.google.com/maps/search/?api=1&query=Mysuru+Palace%2C+Mysuru%2C+Karnataka"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    🗺️ View on Google Maps
+                </a>
+
+                <button class="hall-button location-button"
+                        type="button"
+                        onclick="getDirections('Mysuru Palace, Nazarbad, Mysuru, Karnataka, India')">
+                    🚗 Get Directions from My Location
+                </button>
+
             </div>
         </div>
     </div>
 
+
+    <!-- COMMUNITY FUNCTION HALL -->
     <div class="hall-card">
-        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
-             alt="Community event hall">
+
+        <img
+            src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
+            alt="Community event hall">
+
         <div class="hall-details">
+
             <h2>Community Function Hall</h2>
-            <p>A welcoming venue for meetings, cultural programmes and community events.</p>
+
+            <p>
+                A welcoming venue for meetings, cultural programmes
+                and community events.
+            </p>
+
             <div class="hall-info">
                 <p>👥 Guest capacity: 150</p>
                 <p>✨ Facilities: Chairs, tables and event space</p>
+
                 <p class="hall-price">₹8,000 / day</p>
-                <a class="hall-button" href="/booking">Book This Hall</a>
+
+                <div class="hall-location">
+                    <strong>📍 Hall Location</strong>
+
+                    <p class="location-address">
+                        Jayanagar 4th Block,
+                        Bengaluru, Karnataka, India
+                    </p>
+
+                    <span class="sample-label">SAMPLE LOCATION</span>
+                </div>
+
+                <a class="hall-button"
+                   href="/booking">
+                    Book This Hall
+                </a>
+
+                <a class="hall-button location-button"
+                   href="https://www.google.com/maps/search/?api=1&query=Jayanagar+4th+Block%2C+Bengaluru%2C+Karnataka"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    🗺️ View on Google Maps
+                </a>
+
+                <button class="hall-button location-button"
+                        type="button"
+                        onclick="getDirections('Jayanagar 4th Block, Bengaluru, Karnataka, India')">
+                    🚗 Get Directions from My Location
+                </button>
+
             </div>
         </div>
     </div>
@@ -167,12 +352,94 @@
 </section>
 
 <p class="hall-note">
-    Note: Hall names, capacities, facilities and prices are sample details for the project.
+    <strong>Project demonstration:</strong>
+    Hall locations are sample locations for educational purposes.
+    They are not verified addresses of the actual halls.
 </p>
 
 <footer>
     <p>© 2026 Community Hall Booking and Management System</p>
 </footer>
+
+<script>
+    function showLocationMessage(message) {
+        const box = document.getElementById("location-message");
+
+        box.textContent = message;
+        box.style.display = "block";
+
+        box.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+
+    function getDirections(destination) {
+        if (!navigator.geolocation) {
+            showLocationMessage(
+                "Your browser does not support location access. " +
+                "Please use the View on Google Maps button instead."
+            );
+            return;
+        }
+
+        showLocationMessage(
+            "Requesting your current location. Please allow location access " +
+            "when your browser asks."
+        );
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const mapsUrl =
+                    "https://www.google.com/maps/dir/?api=1" +
+                    "&origin=" + encodeURIComponent(
+                        latitude + "," + longitude
+                    ) +
+                    "&destination=" + encodeURIComponent(destination) +
+                    "&travelmode=driving";
+
+                window.open(mapsUrl, "_blank", "noopener,noreferrer");
+
+                showLocationMessage(
+                    "Your directions are opening in Google Maps. " +
+                    "Remember that the destination is a sample landmark, " +
+                    "not a verified hall entrance."
+                );
+            },
+
+            function(error) {
+                let message;
+
+                if (error.code === error.PERMISSION_DENIED) {
+                    message =
+                        "Location permission was denied. Allow location " +
+                        "access in your browser settings, or use View on Google Maps.";
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    message =
+                        "Your location could not be detected. Check your " +
+                        "device location settings and try again.";
+                } else if (error.code === error.TIMEOUT) {
+                    message =
+                        "Location detection took too long. Please try again.";
+                } else {
+                    message =
+                        "Unable to get your location. Please use Google Maps instead.";
+                }
+
+                showLocationMessage(message);
+            },
+
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 60000
+            }
+        );
+    }
+</script>
 
 </body>
 </html>
